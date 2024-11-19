@@ -30,9 +30,8 @@ public class CommentService{
 
 
 
-    public CommentResponse writeComment(WriteCommentRequest commentRequest/*String username, UUID postid, CommentModel comment*/)
+    public CommentResponse writeComment(WriteCommentRequest commentRequest)
     {
-        String generateId = UUID.randomUUID().toString();
         UserModel userModel = userRepo.findByUsername(commentRequest.username());
         if(userModel == null)
         {
@@ -43,9 +42,7 @@ public class CommentService{
         {
             throw new RuntimeException("This post does not exsist");
         }
-
         CommentModel commentModel = new CommentModel();
-        commentModel.setId(generateId);
         commentModel.setUserModel(userModel);
         commentModel.setPostModel(postModel);
         commentModel.setText(commentRequest.text());
@@ -68,11 +65,12 @@ public class CommentService{
         {
             throw new RuntimeException("This post does not exsist");
         }
-        CommentModel comment = commentRepo.findByUserIdAndPostId(userModel.getId(),postModel.getId());
+        CommentModel comment = commentRepo.findByUserIdAndPostId(userModel.getId(),postModel.getId(),deleteCommentRequest.commentId());
         if(comment == null)
         {
             throw new RuntimeException("this comment does not exsist");
         }
+
         commentRepo.delete(comment);
 
     }
@@ -89,7 +87,7 @@ public class CommentService{
         {
             throw new RuntimeException("This post does not exsist");
         }
-        CommentModel comment = commentRepo.findByUserIdAndPostId(userModel.getId(),postModel.getId());
+        CommentModel comment = commentRepo.findByUserIdAndPostId(userModel.getId(),postModel.getId(),editCommentRequest.commentId());
         if(comment == null)
         {
             throw new RuntimeException("this comment does not exsist");

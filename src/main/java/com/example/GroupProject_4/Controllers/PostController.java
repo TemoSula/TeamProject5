@@ -6,6 +6,7 @@ import com.example.GroupProject_4.Request.PostRequest.DeletePostRequest;
 import com.example.GroupProject_4.Request.PostRequest.PostEditRequest;
 import com.example.GroupProject_4.Response.PostResponse.CreatePostResponse;
 import com.example.GroupProject_4.Services.PostService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class PostController {
 
 
     @PostMapping("/CreatePost")
-    public CreatePostResponse createPost(@RequestBody CreatePostRequest createPostRequest)
+    public CreatePostResponse createPost(@RequestBody @Valid CreatePostRequest createPostRequest)
     {
         return postService.createPost(createPostRequest);
     }

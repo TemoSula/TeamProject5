@@ -1,6 +1,8 @@
 package com.example.GroupProject_4.Models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 import org.springframework.cglib.core.Local;
 import org.springframework.format.annotation.DateTimeFormat;
 

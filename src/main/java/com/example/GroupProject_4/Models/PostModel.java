@@ -8,7 +8,7 @@ import java.util.UUID;
 @Table(name = "posts")
 public class PostModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.UUID)  //457398475983745
     private String id;
     @Column(name = "text")
     private String text;

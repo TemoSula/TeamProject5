@@ -4,6 +4,7 @@ import com.example.GroupProject_4.Models.UserModel;
 import com.example.GroupProject_4.Request.UserRequest.UserRegisterRequest;
 import com.example.GroupProject_4.Services.UserService;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +17,7 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/Register")
-    public UserModel register(@RequestBody UserRegisterRequest registerRequest)
+    public UserModel register(@RequestBody @Valid UserRegisterRequest registerRequest)
     {
         return userService.registerUser(registerRequest);
 

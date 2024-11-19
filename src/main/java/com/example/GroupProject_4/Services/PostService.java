@@ -28,18 +28,18 @@ public class PostService {
 
     public CreatePostResponse createPost(CreatePostRequest createPostRequest)
     {
-        String generatePostId = UUID.randomUUID().toString();
         UserModel userModel = userRepo.findByUsername(createPostRequest.username());
         if(userModel == null)
         {
             throw new RuntimeException("user is not exsist");
         }
         PostModel postModel = new PostModel();
-        postModel.setId(generatePostId);
         postModel.setUsermodel(userModel);
         postModel.setText(createPostRequest.text());
         postRepo.save(postModel);
-        CreatePostResponse response = new CreatePostResponse(postModel.getText(),userModel.getUserName());
+
+
+        CreatePostResponse response = new CreatePostResponse(postModel.getText(),userModel.getUserName(),postModel.getId());
         return response;
 
     }
@@ -49,13 +49,13 @@ public class PostService {
         UserModel userModel = userRepo.findByUsername(deletePostRequest.username());
         if(userModel == null)
         {
-            throw new RuntimeException("user is not exsist");
+            throw new RuntimeException("user does not exsist");
         }
         PostModel postModel = postRepo.getUsernameAndPostId(deletePostRequest.postId(),userModel.getId());
 
         if(postModel == null)
         {
-            throw new RuntimeException("this user doest not have any post");
+            throw new RuntimeException("this user does not have any post");
         }
 
         postRepo.delete(postModel);
@@ -69,7 +69,7 @@ public class PostService {
         UserModel userModel = userRepo.findByUsername(postEditRequest.username());
         if(userModel == null)
         {
-            throw new RuntimeException("user is not exsist");
+            throw new RuntimeException("user does not exsist");
         }
         PostModel postModel = postRepo.getUsernameAndPostId(postEditRequest.postId(),userModel.getId());
         if(postModel == null)
@@ -79,7 +79,7 @@ public class PostService {
 
         postModel.setText(postEditRequest.text());
         postRepo.save(postModel);
-        return new CreatePostResponse(postModel.getText(),userModel.getUserName());
+        return new CreatePostResponse(postModel.getText(),userModel.getUserName(),postModel.getId());
 
     }
 
@@ -92,7 +92,7 @@ public class PostService {
 
         for(PostModel postModel : pagePostModel.getContent())
         {
-             createPostResponses.add(new CreatePostResponse(postModel.getText(),postModel.getUsermodel().getUserName()));
+             createPostResponses.add(new CreatePostResponse(postModel.getText(),postModel.getUsermodel().getUserName(),postModel.getId()));
 
         }
         return createPostResponses;
@@ -102,7 +102,7 @@ public class PostService {
     {
 
         PostModel postModel = postRepo.getById(postid);
-        CreatePostResponse cpr = new CreatePostResponse(postModel.getText(),postModel.getUsermodel().getUserName());
+        CreatePostResponse cpr = new CreatePostResponse(postModel.getText(),postModel.getUsermodel().getUserName(),postModel.getId());
         return cpr;
     }
 
@@ -111,7 +111,7 @@ public class PostService {
         UserModel usermodel = userRepo.findByUsername(username);
         if(usermodel == null)
         {
-            throw new RuntimeException("user is not exsist");
+            throw new RuntimeException("user does not exsist");
         }
 
         Pageable pageable = PageRequest.of(pageNumber,10);
@@ -119,7 +119,7 @@ public class PostService {
         List<CreatePostResponse> createPostResponses = new ArrayList<>();
         for(PostModel pm : userModelPage.getContent())
         {
-            createPostResponses.add(new CreatePostResponse(pm.getText(),pm.getUsermodel().getUserName()));
+            createPostResponses.add(new CreatePostResponse(pm.getText(),pm.getUsermodel().getUserName(),pm.getId()));
         }
         return createPostResponses;
 
