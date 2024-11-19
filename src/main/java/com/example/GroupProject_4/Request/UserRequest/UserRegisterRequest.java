@@ -36,7 +36,5 @@ public record UserRegisterRequest
          //@JsonFormat(pattern = "yyyy-MM-DD", shape = JsonFormat.Shape.STRING)
          @PastOrPresent(message = "Birth date must be today or in the past")
          @NotNull(message = "dateofbirthday can't be null")
-
-         //@Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}", message = "Date must be in the format yyyy-MM-dd")
          LocalDate dateofbirthday)
 {}

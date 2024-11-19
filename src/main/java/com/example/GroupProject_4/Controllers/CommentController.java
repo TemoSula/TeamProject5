@@ -8,6 +8,7 @@ import com.example.GroupProject_4.Request.PostRequest.DeletePostRequest;
 import com.example.GroupProject_4.Response.CommentResponse;
 import com.example.GroupProject_4.Services.CommentService;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class CommentController {
 
 
     @PostMapping("/WriteComment")
-    public CommentResponse writeComment(@RequestBody WriteCommentRequest writeCommentRequest)
+    public CommentResponse writeComment(@RequestBody @Valid WriteCommentRequest writeCommentRequest)
     {
         return comntService.writeComment(writeCommentRequest);
     }

@@ -1,13 +1,19 @@
 package com.example.GroupProject_4.Services;
 
+import com.example.GroupProject_4.Exceptions.PostNotFound;
+import com.example.GroupProject_4.Exceptions.UserNotFound;
+import com.example.GroupProject_4.Models.CommentModel;
 import com.example.GroupProject_4.Models.PostModel;
 import com.example.GroupProject_4.Models.UserModel;
+import com.example.GroupProject_4.Repositories.CommentRepository;
 import com.example.GroupProject_4.Repositories.PostRepository;
 import com.example.GroupProject_4.Repositories.UserRepostory;
 import com.example.GroupProject_4.Request.PostRequest.CreatePostRequest;
 import com.example.GroupProject_4.Request.PostRequest.DeletePostRequest;
 import com.example.GroupProject_4.Request.PostRequest.PostEditRequest;
+import com.example.GroupProject_4.Response.CommentResponse;
 import com.example.GroupProject_4.Response.PostResponse.CreatePostResponse;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,12 +32,25 @@ public class PostService {
     @Autowired
     UserRepostory userRepo;
 
+    @Autowired
+    CommentRepository commentRepository;
+
+    @Transactional(value = Transactional.TxType.REQUIRES_NEW)
+    private void deletePostAndComments(String postId) {
+        // Delete all related comments first
+        commentRepository.removeByPostId(postId);
+
+        // Delete the post
+        postRepo.deleteById(postId);
+    }
+
+
     public CreatePostResponse createPost(CreatePostRequest createPostRequest)
     {
         UserModel userModel = userRepo.findByUsername(createPostRequest.username());
         if(userModel == null)
         {
-            throw new RuntimeException("user is not exsist");
+            throw new UserNotFound("user is not exsist");
         }
         PostModel postModel = new PostModel();
         postModel.setUsermodel(userModel);
@@ -49,16 +68,17 @@ public class PostService {
         UserModel userModel = userRepo.findByUsername(deletePostRequest.username());
         if(userModel == null)
         {
-            throw new RuntimeException("user does not exsist");
+            throw new UserNotFound("user does not exsist");
         }
         PostModel postModel = postRepo.getUsernameAndPostId(deletePostRequest.postId(),userModel.getId());
 
         if(postModel == null)
         {
-            throw new RuntimeException("this user does not have any post");
+            throw new PostNotFound("this user doest not have this post");
         }
 
-        postRepo.delete(postModel);
+        deletePostAndComments(deletePostRequest.postId());
+        //postRepo.delete(postModel);
 
 
     }
@@ -69,12 +89,12 @@ public class PostService {
         UserModel userModel = userRepo.findByUsername(postEditRequest.username());
         if(userModel == null)
         {
-            throw new RuntimeException("user does not exsist");
+            throw new UserNotFound("user does not exsist");
         }
         PostModel postModel = postRepo.getUsernameAndPostId(postEditRequest.postId(),userModel.getId());
         if(postModel == null)
         {
-            throw new RuntimeException("this user doest not have any post");
+            throw new PostNotFound("this user doest not have this post");
         }
 
         postModel.setText(postEditRequest.text());
@@ -111,7 +131,7 @@ public class PostService {
         UserModel usermodel = userRepo.findByUsername(username);
         if(usermodel == null)
         {
-            throw new RuntimeException("user does not exsist");
+            throw new UserNotFound("user does not exsist");
         }
 
         Pageable pageable = PageRequest.of(pageNumber,10);

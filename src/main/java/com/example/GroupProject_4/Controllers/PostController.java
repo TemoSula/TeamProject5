@@ -6,6 +6,7 @@ import com.example.GroupProject_4.Request.PostRequest.DeletePostRequest;
 import com.example.GroupProject_4.Request.PostRequest.PostEditRequest;
 import com.example.GroupProject_4.Response.PostResponse.CreatePostResponse;
 import com.example.GroupProject_4.Services.PostService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,7 +34,7 @@ public class PostController {
     }
 
     @PutMapping("/EditPost")
-    public CreatePostResponse editPost(@RequestBody PostEditRequest postEditRequest)
+    public CreatePostResponse editPost(@RequestBody @Valid PostEditRequest postEditRequest)
     {
         return postService.edit(postEditRequest);
     }
