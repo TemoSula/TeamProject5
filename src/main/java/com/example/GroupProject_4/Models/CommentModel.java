@@ -1,11 +1,16 @@
 package com.example.GroupProject_4.Models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+
+@Getter
+@Setter
 @Entity
 @Table(name = "comments")
 public class CommentModel {
@@ -21,7 +26,7 @@ public class CommentModel {
     @JoinColumn(name = "user_id")
     private UserModel userModel;
 
-    public String getId() {
+   /* public String getId() {
         return id;
     }
 
@@ -51,5 +56,5 @@ public class CommentModel {
 
     public void setUserModel(UserModel userModel) {
         this.userModel = userModel;
-    }
+    }*/
 }

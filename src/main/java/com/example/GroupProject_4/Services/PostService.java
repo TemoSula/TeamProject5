@@ -35,8 +35,8 @@ public class PostService {
     @Autowired
     CommentRepository commentRepository;
 
-    @Transactional(value = Transactional.TxType.REQUIRES_NEW)
-    private void deletePostAndComments(String postId) {
+    @Transactional
+    public void deletePostAndComments(String postId) {
         // Delete all related comments first
         commentRepository.removeByPostId(postId);
 

@@ -1,9 +1,13 @@
 package com.example.GroupProject_4.Models;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.UUID;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "posts")
 public class PostModel {
@@ -17,7 +21,7 @@ public class PostModel {
     private UserModel usermodel;
 
 
-    public String getId() {
+    /*public String getId() {
         return id;
     }
 
@@ -39,5 +43,5 @@ public class PostModel {
 
     public void setUsermodel(UserModel usermodel) {
         this.usermodel = usermodel;
-    }
+    }*/
 }

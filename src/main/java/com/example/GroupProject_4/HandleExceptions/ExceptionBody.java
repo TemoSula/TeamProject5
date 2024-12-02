@@ -1,9 +1,13 @@
 package com.example.GroupProject_4.HandleExceptions;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.http.HttpStatusCode;
 
 import java.util.Date;
 
+@Getter
+@Setter
 public class ExceptionBody {
     private String message;
     private HttpStatusCode httpStatusCode;
@@ -14,7 +18,7 @@ public class ExceptionBody {
 
 
 
-    public String getMessage() {
+    /*public String getMessage() {
         return message;
     }
 
@@ -44,5 +48,5 @@ public class ExceptionBody {
 
     public void setTimeStamp(Date timeStamp) {
         this.timeStamp = timeStamp;
-    }
+    }*/
 }

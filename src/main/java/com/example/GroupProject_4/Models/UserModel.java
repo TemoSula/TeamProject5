@@ -3,6 +3,8 @@ package com.example.GroupProject_4.Models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.cglib.core.Local;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -10,6 +12,8 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "users")
 public class UserModel {
@@ -25,7 +29,7 @@ public class UserModel {
     @Column(name = "dateofbirthday")
     private LocalDate dateOfBirthday;
 
-    public String getId() {
+    /*public String getId() {
         return id;
     }
 
@@ -63,5 +67,5 @@ public class UserModel {
 
     public void setDateOfBirthday(LocalDate dateOfBirthday) {
         this.dateOfBirthday = dateOfBirthday;
-    }
+    }*/
 }

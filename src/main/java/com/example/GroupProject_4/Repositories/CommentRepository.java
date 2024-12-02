@@ -16,8 +16,16 @@ public interface CommentRepository extends JpaRepository<CommentModel, String> {
     @Query(value = "SELECT * from comments where user_id = :userid and post_id = :postid and id = :commentid",nativeQuery = true)
     CommentModel findByUserIdAndPostId(@Param("userid") String userid, @Param("postid") String postid,@Param("commentid") String commentid);
 
+    @Query("select cm from CommentModel cm where cm.userModel.id = :userId")
+    CommentModel getCommentById(@Param("userId") String userId);
+
     @Transactional
     @Modifying
     @Query(value = "delete from comments where post_id = :postId",  nativeQuery = true)
     void removeByPostId(@Param("postId") String postId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "delete from comments where user_id = :userId", nativeQuery = true)
+    void RemoveCommentByUserId(@Param("userId") String userId);
 }
