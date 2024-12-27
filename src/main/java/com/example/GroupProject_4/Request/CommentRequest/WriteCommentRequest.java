@@ -1,5 +1,6 @@
 package com.example.GroupProject_4.Request.CommentRequest;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Size;
@@ -11,8 +12,9 @@ import java.util.UUID;
 
 public record WriteCommentRequest(
 
-        @NotNull(message = "username can't be null")
-        String username,
+        //@NotNull(message = "username can't be null")
+        //@JsonIgnore
+        //String username,
         @NotNull(message = "postid can't be null")
         String postid,
         @NotNull(message = "text can't be null")

@@ -5,5 +5,5 @@ import lombok.Setter;
 
 
 
-public record PostEditRequest (String username, String postId, String text){
+public record PostEditRequest (/*String username,*/ String postId, String text){
 }

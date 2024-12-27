@@ -14,6 +14,7 @@ import com.example.GroupProject_4.Request.CommentRequest.EditCommentRequest;
 import com.example.GroupProject_4.Request.CommentRequest.WriteCommentRequest;
 import com.example.GroupProject_4.Response.CommentResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -35,7 +36,9 @@ public class CommentService{
 
     public CommentResponse writeComment(WriteCommentRequest commentRequest)
     {
-        UserModel userModel = userRepo.findByUsername(commentRequest.username());
+        //
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserModel userModel = userRepo.findByUsername(username  /*commentRequest.username()*/);
         if(userModel == null)
         {
             throw new UserNotFound("user is not exsist");
@@ -57,8 +60,8 @@ public class CommentService{
     public void deleteComment(DeleteCommentRequest deleteCommentRequest)
     {
 
-
-        UserModel userModel = userRepo.findByUsername(deleteCommentRequest.username());
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserModel userModel = userRepo.findByUsername(username /*deleteCommentRequest.username()*/);
         if(userModel == null)
         {
             throw new UserNotFound("User not found");
@@ -80,7 +83,8 @@ public class CommentService{
 
     public CommentResponse editComment(EditCommentRequest editCommentRequest)
     {
-        UserModel userModel = userRepo.findByUsername(editCommentRequest.username());
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserModel userModel = userRepo.findByUsername(username/*editCommentRequest.username()*/);
         if(userModel == null)
         {
             throw new UserNotFound("user is not exsist");

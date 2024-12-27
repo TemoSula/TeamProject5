@@ -12,10 +12,13 @@ import com.example.GroupProject_4.Repositories.UserRepostory;
 import com.example.GroupProject_4.Request.ReqresUserRequest.Data;
 import com.example.GroupProject_4.Request.ReqresUserRequest.ReqresUserModelRequest;
 import com.example.GroupProject_4.Request.UserRequest.UserRegisterRequest;
+import com.example.GroupProject_4.enums.UserStatus;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -27,17 +30,18 @@ import java.util.logging.Logger;
 @Service
 public class UserService {
 
-    /*@Autowired
-    Logger log;*/
 
     @Autowired
     UserRepostory userrepo;
 
     @Autowired
-    PostService postService;
+    PostRepository postRepo;
 
     @Autowired
-    PostRepository postRepo;
+    JwtService jwtService;
+
+    @Autowired
+    BCryptPasswordEncoder encoder;
 
     @Autowired
     CommentRepository commentRepo;
@@ -45,23 +49,10 @@ public class UserService {
     @Autowired
     UserFeign userFeign;
 
-    @Transactional
-    public void removeUserAndPost(String userid)
-    {
-
-        commentRepo.RemoveCommentByUserId(userid);
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
 
 
-        PostModel postModel = postRepo.getPostByUserId(userid);
-
-        commentRepo.removeByPostId(postModel.getId());
-        postRepo.removePostByUserId(userid);
-
-        /*postService.deletePostAndComments(postModel.getId());*/
-
-        userrepo.removeUserById(userid);
-
-    }
 
 
     public UserModel registerUser(UserRegisterRequest registerRequest)
@@ -74,6 +65,8 @@ public class UserService {
         }
      UserModel userModel = new UserModel();
      userModel.setUserName(registerRequest.username());
+     userModel.setPassword(passwordEncoder.encode(registerRequest.password()));
+     userModel.setRoles(registerRequest.roles());
      userModel.setFirstName(registerRequest.firstname());
      userModel.setLastName(registerRequest.lastname());
      userModel.setDateOfBirthday(registerRequest.dateofbirthday());
@@ -100,8 +93,10 @@ public class UserService {
             userrepo.save(userModel1);
             }
             }
-        System.out.println("everything will be done");
+        System.out.println("done..........");
     }
+
+
 
     /*request2.getData().stream()
         .map(data -> {
@@ -121,19 +116,54 @@ public class UserService {
 
 System.out.println("everything will be done");*/
 
+    @Transactional
+    public void removeUserAndPost(String userid)
+    {
+
+        commentRepo.RemoveCommentByUserId(userid);
 
 
-        public void removeUsers()
-        {            userrepo.deleteAll();
+        PostModel postModel = postRepo.getPostByUserId(userid);
+        if(postModel != null) {
+            commentRepo.removeByPostId(postModel.getId());
+            postRepo.removePostByUserId(userid);
         }
-    public void removeUserById(String id){
+        /*postService.deletePostAndComments(postModel.getId());*/
+        SecurityContextHolder.clearContext();
+        userrepo.removeUserById(userid);
 
-        UserModel userModel = userrepo.getUserById(id);
+    }
+
+
+    public void removeUserById(){
+
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserModel userModel = userrepo.findByUsername(username);
         if(userModel == null)
         {
             throw new RuntimeException("user not found");
         }
-        removeUserAndPost(id);
+        removeUserAndPost(userModel.getId());
     }
+
+    public String login(String username, String password)
+    {
+        UserModel userModel = userrepo.findByUsername(username);
+        if(userModel == null)
+        {
+            throw new UserNotFound("User Does not exsist");
+        }
+        if(!encoder.matches(password,userModel.getPassword()))
+        {
+            throw new UserNotFound("username or password is not correct");
+        }
+        if(userModel.getStatus() == UserStatus.BLOCKED)
+        {
+            throw  new UserNotFound("user is blocked by Admin, You can't user your account");
+        }
+        return jwtService.generateToken(userModel.getUserName());
+    }
+
+
 
 }

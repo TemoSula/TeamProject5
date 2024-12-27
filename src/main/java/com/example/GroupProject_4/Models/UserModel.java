@@ -1,16 +1,12 @@
 package com.example.GroupProject_4.Models;
 
+import com.example.GroupProject_4.enums.Roles;
+import com.example.GroupProject_4.enums.UserStatus;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.cglib.core.Local;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -26,6 +22,14 @@ public class UserModel {
     private String lastName;
     @Column(name = "username")
     private String userName;
+    @Column(name = "password")
+    private String password;
+    @Column(name = "roles")
+    @Enumerated(EnumType.STRING)
+    private Roles roles;
+    @Column(name = "Status")
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
     @Column(name = "dateofbirthday")
     private LocalDate dateOfBirthday;
 

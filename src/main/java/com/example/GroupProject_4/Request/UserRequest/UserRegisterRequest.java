@@ -1,5 +1,6 @@
 package com.example.GroupProject_4.Request.UserRequest;
 
+import com.example.GroupProject_4.enums.Roles;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
@@ -31,6 +32,9 @@ public record UserRegisterRequest
          @Size(min = 4,max = 16,message = "text can't be lower 4 and higher 16")
          String username,
 
+         String password,
+
+         Roles roles,
 
          //@Pattern(regexp = "\\d{4}-\\d{2}-\\d{2}", message = "Date must follow the format YYYY-MM-DD")
          //@JsonFormat(pattern = "yyyy-MM-DD", shape = JsonFormat.Shape.STRING)

@@ -5,5 +5,5 @@ import lombok.Setter;
 
 import java.util.UUID;
 
-public record DeletePostRequest(String username,String postId) {
+public record DeletePostRequest(/*String username,*/String postId) {
 }

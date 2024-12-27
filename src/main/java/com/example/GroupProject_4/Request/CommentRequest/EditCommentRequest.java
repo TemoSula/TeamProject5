@@ -6,5 +6,5 @@ import lombok.Setter;
 import java.util.UUID;
 
 
-public record EditCommentRequest(String username,String postid,String text,String commentId) {
+public record EditCommentRequest(/*String username,*/String postid,String text,String commentId) {
 }
